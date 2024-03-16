@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197122844512",
+    "project_id": "hackathon-hacked2",
+    "storage_bucket": "hackathon-hacked2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197122844512:android:1e37905c72146e40e06005",
+        "android_client_info": {
+          "package_name": "com.example.hackathon_hacked2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdwHQSdtirv2JIvK1Ty8b5dNt7DTrfngw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

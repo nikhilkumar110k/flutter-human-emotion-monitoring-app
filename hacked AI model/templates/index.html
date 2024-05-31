@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Emotion Prediction</h1>
+    <div>
+        <label for="sentence">Enter a sentence:</label>
+        <input type="text" id="sentence" name="sentence">
+        <button onclick="predictEmotion()">Predict</button>
+    </div>
+    <div>
+        <h2>Emotion:</h2>
+        <p id="emotion"></p>
+        <canvas id="emotionChart" width="400" height="200"></canvas>
+        <h2>Recommended Song:</h2>
+        <p id="recommendedSong"></p>
+    </div>
+
+    <script>
+        function predictEmotion() {
+            const sentence = document.getElementById('sentence').value;
+            axios.post('/predict_emotion', { text: sentence })
+                .then(response => {
+                    const data = response.data;
+                    document.getElementById('emotion').innerText = `Emotion: ${data.emotion}`;
+                    renderChart(data.percentage);
+                    renderRecommendedSongs(data.recommended_songs);
+                })
+                .catch(error => {
+                    console.error('Error predicting emotion:', error);
+                });
+        }
+    
+        function renderChart(percentage) {
+            const ctx = document.getElementById('emotionChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Happy', 'Sad', 'Neutral'],
+                    datasets: [{
+                        label: 'Emotion Percentage',
+                        data: [percentage, percentage, percentage],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    
+        function renderRecommendedSongs(data) {
+    const recommendedSongElement = document.getElementById('recommendedSong');
+    recommendedSongElement.innerHTML = "<h2>Recommended Song:</h2>";
+    if (data && data.song_name) {
+        recommendedSongElement.innerHTML += `<p>${data.song_name}</p>`;
+        if (data.recommended_songs.length === 0) {
+            recommendedSongElement.innerHTML += "<p>No recommended songs found.</p>";
+        } else {
+            const songList = data.recommended_songs.map(song => `<li>${song}</li>`).join('');
+            recommendedSongElement.innerHTML += `<ul>${songList}</ul>`;
+        }
+    } else {
+        recommendedSongElement.innerHTML += "<p>No recommended song found.</p>";
+    }
+}
+    </script>
+</body>
+</html>
